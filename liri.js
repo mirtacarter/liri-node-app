@@ -17,6 +17,7 @@ var fs = require("fs");
 var command = process.argv[2];
 var input = process.argv;
 var searchQuery = "";
+
 // Loop to create multi-word search query
 for (var i = 3; i < input.length; i++) {
 
@@ -78,18 +79,18 @@ function getTweets () {
 }
 
 // Spotify Search
-var spotify = new Spotify(keys.spotify);
-var songName = searchQuery;
+
 
 function getSong() {
-    if (songName === undefined) {
-        songName = "The Sign";
-    } else {
+    var spotify = new Spotify(keys.spotify);
+    if (!searchQuery) {
+        searchQuery = "The Sign";
+    } 
 
 spotify.search (
     {
         type: "track", 
-        query: songName
+        query: searchQuery
     }, 
     function(err, data) {
         if (err) {
@@ -98,17 +99,15 @@ spotify.search (
         }
 
         var songs = data.tracks.items;
-        for (var i = 0; i < songs.length; i++) {
-            console.log(i);
-            console.log("Artist(s): " + songs[i].artists.mpa(getArtistNames));
-            console.log("Song Name: " + songs[i].name);
-            console.log("Preview Link: " + songs[i].preview_url);
-            console.log("Album: " + songs[i].album.name);
+            console.log("Artist(s): " + songs[0].artists[0].name);
+            console.log("Song Name: " + songs[0].name);
+            console.log("Preview Link: " + songs[0].preview_url);
+            console.log("Album: " + songs[0].album.name);
             console.log("-------------------------------");
-        }
+        
     }
 )};
-}
+
 
 // OMDB
 function movie() {
