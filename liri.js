@@ -10,8 +10,7 @@ var request = require("request");
 // Import keys
 var keys = require("./keys");
 
-// Import FS package
-var fs = require("fs");
+
 
 // Input variables
 var command = process.argv[2];
@@ -22,21 +21,15 @@ var searchQuery = "";
 for (var i = 3; i < input.length; i++) {
 
     if (i > 3 && i < input.length) {
-  
       searchQuery = searchQuery + "+" + input[i];
-  
     }
-  
     else {
-  
       searchQuery += input[i];
-  
     }
   }
   
 
-
-// Main function
+// Switch
 switch (command) {
 	case "my-tweets":
 	getTweets(searchQuery);
@@ -47,15 +40,13 @@ switch (command) {
 	break;
 
 	case "movie-this":
-	movie(searchQuery);
+	getMovie(searchQuery);
 	break;
 
 	case "do-what-it-says":
 	doIt();
 	break;
 };
-
-
 
 
 // Twitter Search
@@ -79,8 +70,6 @@ function getTweets () {
 }
 
 // Spotify Search
-
-
 function getSong() {
     var spotify = new Spotify(keys.spotify);
     if (!searchQuery) {
@@ -110,9 +99,12 @@ spotify.search (
 
 
 // OMDB
-function movie() {
+function getMovie() {
+    if (!searchQuery) {
+        searchQuery = "Mr. Nobody";
   var queryUrl = "http://www.omdbapi.com/?t=" + searchQuery + "&y=&plot=short&apikey=trilogy";
 
+} 
   request(queryUrl, function(error, response, body) {
     if (!error && response.statusCode === 200) {    
         console.log("Title: " + JSON.parse(body).Title);
@@ -127,25 +119,24 @@ function movie() {
 });
 }
 
-function doIt() {
-	fs.readFile('random.txt', "utf8", function(error, data){
+// function doIt() {
+//     var fs = require("fs");
+// 	fs.readFile("./random.txt", "utf8", function(error, data){
 
-		if (error) {
-    		return console.log(error);
-  		}
-
-		var dataArr = data.split(",");
-		if (dataArr[0] === "spotify-this-song") {
-			var songCheck = dataArr[1].slice(1, -1);
-			spotify(songCheck);
-		} else if (dataArr[0] === "my-tweets") {
-			var tweetName = dataArr[1].slice(1, -1);
-			twitter(tweetName);
-		} else if(dataArr[0] === "movie-this") {
-			var movieTitle = dataArr[1].slice(1, -1);
-			movie(movieTitle);
-		} 
+// 		if (error) {
+//     		return console.log(error);
+//   		}
+//           var randomTxt = data.toString().split(',');
+//           if (randomTxt[0] === "spotify-this-song"){
+//               searchQuery = randomTxt[1];
+//               getSong(searchQuery);
+//           } else if (randomTxt[0] === "my-tweets"){
+//               getTweets();
+//         } else if (randomTxt[0] === "movie-this"){
+//             searchQuery = randomTxt[1];
+//               getMovie(searchQuery);
+//         }
 		
-  	});
+//   	});
 
-};
+// };
