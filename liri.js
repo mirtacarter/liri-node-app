@@ -16,11 +16,11 @@ var fs = require("fs");
 // Input variables
 var command = process.argv[2];
 var input = process.argv;
-// Loop to create multi-word search query
 var searchQuery = "";
-for (var i = 2; i < input.length; i++) {
+// Loop to create multi-word search query
+for (var i = 3; i < input.length; i++) {
 
-    if (i > 2 && i < input.length) {
+    if (i > 3 && i < input.length) {
   
       searchQuery = searchQuery + "+" + input[i];
   
@@ -32,6 +32,7 @@ for (var i = 2; i < input.length; i++) {
   
     }
   }
+  
 
 
 // Main function
@@ -111,7 +112,7 @@ spotify.search (
 
 // OMDB
 function movie() {
-  var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+  var queryUrl = "http://www.omdbapi.com/?t=" + searchQuery + "&y=&plot=short&apikey=trilogy";
 
   request(queryUrl, function(error, response, body) {
     if (!error && response.statusCode === 200) {    
