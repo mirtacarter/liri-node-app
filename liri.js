@@ -10,7 +10,8 @@ var request = require("request");
 // Import keys
 var keys = require("./keys");
 
-
+// Import the FS package for read/write.
+var fs = require("fs");
 
 // Input variables
 var command = process.argv[2];
@@ -29,24 +30,7 @@ for (var i = 3; i < input.length; i++) {
   }
   
 
-// Switch
-switch (command) {
-	case "my-tweets":
-	getTweets(searchQuery);
-	break;
 
-	case "spotify-this-song":
-	getSong(searchQuery);
-	break;
-
-	case "movie-this":
-	getMovie(searchQuery);
-	break;
-
-	case "do-what-it-says":
-	doIt();
-	break;
-};
 
 
 // Twitter Search
@@ -119,24 +103,48 @@ function getMovie() {
 });
 }
 
-// function doIt() {
-//     var fs = require("fs");
-// 	fs.readFile("./random.txt", "utf8", function(error, data){
+function doIt() {
+    fs.readFile("random.txt", "utf8", function(error, data) {
+        console.log(data);
+    
+        var dataArr = data.split(",");
+    
+        if (dataArr.length === 2) {
+          pick(dataArr[0], dataArr[1]);
+        } else if (dataArr.length === 1) {
+          pick(dataArr[0]);
+        }
+      });
+    };
 
-// 		if (error) {
-//     		return console.log(error);
-//   		}
-//           var randomTxt = data.toString().split(',');
-//           if (randomTxt[0] === "spotify-this-song"){
-//               searchQuery = randomTxt[1];
-//               getSong(searchQuery);
-//           } else if (randomTxt[0] === "my-tweets"){
-//               getTweets();
-//         } else if (randomTxt[0] === "movie-this"){
-//             searchQuery = randomTxt[1];
-//               getMovie(searchQuery);
-//         }
-		
-//   	});
 
-// };
+// Switch
+var pick = function(command, searchQuery) {
+switch (command) {
+	case "my-tweets":
+	getTweets(searchQuery);
+	break;
+
+	case "spotify-this-song":
+	getSong(searchQuery);
+	break;
+
+	case "movie-this":
+	getMovie(searchQuery);
+	break;
+
+	case "do-what-it-says":
+	doIt();
+	break;
+};
+}
+
+// Function which takes in command line arguments and executes correct function accordingly
+var runThis = function(argOne, argTwo) {
+    pick(argOne, argTwo);
+  };
+  
+  // MAIN PROCESS
+  // =====================================
+  runThis(process.argv[2], process.argv.slice(3).join(" "));
+  
