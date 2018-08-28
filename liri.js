@@ -9,6 +9,7 @@ var request = require("request");
 
 // Import keys
 var keys = require("./keys");
+var spotify = new Spotify(keys.spotify);
 
 // Import the FS package for read/write.
 var fs = require("fs");
@@ -16,20 +17,6 @@ var fs = require("fs");
 // Input variables
 var command = process.argv[2];
 var input = process.argv;
-var searchQuery = "";
-
-// Loop to create multi-word search query
-for (var i = 3; i < input.length; i++) {
-
-    if (i > 3 && i < input.length) {
-      searchQuery = searchQuery + "+" + input[i];
-    }
-    else {
-      searchQuery += input[i];
-    }
-  }
-  
-
 
 
 
@@ -54,10 +41,10 @@ function getTweets () {
 }
 
 // Spotify Search
-function getSong() {
-    var spotify = new Spotify(keys.spotify);
+function getSong(searchQuery) {
+
     if (!searchQuery) {
-        searchQuery = "The Sign";
+        searchQuery = "In My Feelings";
     } 
 
 spotify.search (
@@ -79,16 +66,17 @@ spotify.search (
             console.log("-------------------------------");
         
     }
+
 )};
 
 
 // OMDB
-function getMovie() {
+var getMovie = function(searchQuery) {
     if (!searchQuery) {
-        searchQuery = "Mr. Nobody";
+        searchQuery = "Mr. Nobody";}
   var queryUrl = "http://www.omdbapi.com/?t=" + searchQuery + "&y=&plot=short&apikey=trilogy";
 
-} 
+
   request(queryUrl, function(error, response, body) {
     if (!error && response.statusCode === 200) {    
         console.log("Title: " + JSON.parse(body).Title);
@@ -146,5 +134,6 @@ var runThis = function(argOne, argTwo) {
   
   // MAIN PROCESS
   // =====================================
-  runThis(process.argv[2], process.argv.slice(3).join(" "));
+  runThis(command, input.slice(3).join(" "));
+  
   
